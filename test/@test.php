@@ -7,7 +7,8 @@ use function Autil\_, Autil\match, Autil\type;
 
 
 
-_( [1,2,3] );
+
+_( [1,2,3, "4", "hi"] );
 // (1, 2, 3)
 
 
@@ -28,8 +29,8 @@ _( $assoc );
 
 
 $arr2d = [
-   [1,2,3],
-   [4,5,6],
+   [1,2,"3","a"],
+   [4,5,"6","b"],
 ];
 _( $arr2d );
 /****  output  *****
@@ -105,16 +106,16 @@ _( type($jsonObj) ); // [object stdClass]
 
 _( get_object_vars($jsonObj) );
 /****  output  *****
-[customers]: (
-      {
-         name: Mike Davis
-         age: 25
-      }, 
-      {
-         name: Sala Jordan
-         age: 17
-      }
-   )
+[customers]:(
+   {
+      name: Mike Davis
+      age: 25
+   }, 
+   {
+      name: Sala Jordan
+      age: 17
+   }
+)
 /****************/
 
 

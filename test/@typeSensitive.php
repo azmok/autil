@@ -108,16 +108,16 @@ __( type($jsonObj) ); // [object stdClass]
 
 __( get_object_vars($jsonObj) );
 /****  output  *****
-["customers"]: (
-      {
-         "name": "Mike Davis"
-         "age": 25
-      }, 
-      {
-         "name": "Sala Jordan"
-         "age": 17
-      }
-   )
+["customers"]:(
+   {
+      "name": "Mike Davis"
+      "age": 25
+   }, 
+   {
+      "name": "Sala Jordan"
+      "age": 17
+   }
+)
 /****************/
 
 

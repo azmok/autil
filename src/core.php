@@ -207,7 +207,7 @@ function type($val){
       return "[Function]";
       
    # Number
-   } elseif ( is_numeric($val) ) {
+   } elseif ( gettype($val) !== ('string')   &&   is_numeric($val) ) {
       return "[Number]";
       
    # Null
@@ -307,6 +307,7 @@ function _forEach($fn, $arr){
    }
 }
 
+/*
 function object2String($obj, $depth=0, $caller=null){
    $str = "";
    $BASE = 1;
@@ -384,7 +385,7 @@ function prettify($arr, $depth=0, $caller=null, $format_assoc=False){
          
          # $curr :: [Array]
          } elseif( isType("[Array]", $val) ){
-            $str .= prettify($val, $depth+1, $arr, $format_assoc);
+            $str .= prettify($val, $depth, $arr, $format_assoc);
          
          # $curr :: ![Array] && ![AssocArray]
          } else {
@@ -542,6 +543,7 @@ function toString($arg, $depth=0, $caller=Null){
    }
 }
 
+/**/
 
 
 
@@ -551,8 +553,7 @@ function toString($arg, $depth=0, $caller=Null){
 
 
 
-
-function __object2String($obj, $depth=0, $caller=null){
+function object2String($obj, $depth=0, $caller=null){
    $str = "";
    $BASE = 1;
    $tabNum = $BASE * (1 + $depth); // $BASE + $BASE*$depth;
@@ -580,14 +581,14 @@ function __object2String($obj, $depth=0, $caller=null){
       foreach($arr as $key=>$val){
       
          # type(val) === object
-         $key = __toString($key);
+         $key = toString($key);
          
          if ( is_object($val) ) {
-            $str .= prependTab("{$key}", $tabNum)  .": ".  __object2String($val, $depth+1, $obj);
+            $str .= prependTab("{$key}", $tabNum)  .": ".  object2String($val, $depth+1, $obj);
          
          # type($val) !== object
          } else {
-            $str .= prependTab("{$key}", $tabNum)  .": ".  __toString($val, $depth+1, $obj);
+            $str .= prependTab("{$key}", $tabNum)  .": ".  toString($val, $depth+1, $obj);
             $str .= "<br>";
          }
       }
@@ -600,7 +601,7 @@ function __object2String($obj, $depth=0, $caller=null){
 }
 
 
-function __prettify($arr, $depth=0, $caller=null, $format_assoc=False){
+function prettify($arr, $depth=0, $caller=null, $format_assoc=False){
    
    $BASE = 1;
    
@@ -621,23 +622,23 @@ function __prettify($arr, $depth=0, $caller=null, $format_assoc=False){
          }
          
          ###### (2) add tab
-         $key = __toString($key);
+         $key = toString($key);
          $str .= prependTab("[{$key}]:", $depth);
          
          ###### (3) add "[$key]: $val"  ######
          # $curr :: [AssocArray]
          if( isType("[AssocArray]", $val) ){
-            $str .= __prettify($val, $depth+1, $arr, $format_assoc);
+            $str .= prettify($val, $depth+1, $arr, $format_assoc);
          
          # $curr :: [Array]
          } elseif( isType("[Array]", $val) ){
-            $str .= __prettify($val, $depth+1, $arr, $format_assoc);
+            $str .= prettify($val, $depth, $arr, $format_assoc);
          
          # $curr :: ![Array] && ![AssocArray]
          } else {
          
             # inject $curr
-            $str .= " ".  __toString($val, $depth+1, $arr);
+            $str .= " ".  toString($val, $depth+1, $arr);
          }
          $indx++;
       }
@@ -677,16 +678,16 @@ function __prettify($arr, $depth=0, $caller=null, $format_assoc=False){
             ######  (2) add $curr  ######
             # $curr :: [Array]
             if( isType("[Array]", $curr) ){
-               $str .= "<br>".  __prettify($curr, $depth+1, $arr, $format_assoc);
+               $str .= "<br>".  prettify($curr, $depth+1, $arr, $format_assoc);
             
             # $curr :: [AssocArray]
             } elseif( isType("[AssocArray]", $curr) ){
-               $str .= "<br>".  __prettify($curr, $depth+1, $arr, $format_assoc);
+               $str .= "<br>".  prettify($curr, $depth+1, $arr, $format_assoc);
             
             # $curr :: ![Array] && ![AssocArray]
             } else {
                # inject $curr
-               $str2 = __toString($curr, $depth+1, $arr);
+               $str2 = toString($curr, $depth+1, $arr);
                
                # type($curr) === object
                if( preg_match("~\[object ~", $str2) ){
@@ -737,7 +738,7 @@ function __prettify($arr, $depth=0, $caller=null, $format_assoc=False){
 }
 
 
-function __toString($arg, $depth=0, $caller=Null){
+function toString($arg, $depth=0, $caller=Null){
    ## String, Regex
    if( isType("[String]", $arg)  ||  isType("[Regex]", $arg) ){
       # typeRepresentation
@@ -749,6 +750,7 @@ function __toString($arg, $depth=0, $caller=Null){
       
    ## Number
    } elseif( isType("[Number]", $arg) ){
+      //exho('[Number]:: ', $arg);
       return "{$arg}";
    
    ## Boolean
@@ -759,7 +761,7 @@ function __toString($arg, $depth=0, $caller=Null){
    } elseif ( isAssoc($arg)  ||
               isArray($arg) ){
 
-      return __prettify($arg, $depth, $caller);
+      return prettify($arg, $depth, $caller);
    
    ## Object
    } elseif ( is_object($arg) ){
@@ -773,7 +775,7 @@ function __toString($arg, $depth=0, $caller=Null){
          return $arg->__toString();
       
       } else {
-         return __object2String($arg, $depth, $caller);
+         return object2String($arg, $depth, $caller);
       }
    
    ## Function

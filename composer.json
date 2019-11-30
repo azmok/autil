@@ -2,7 +2,7 @@
    "name": "azmok/autil",
    "version": "1.0.0",
    "autoload": {
-      "files": ["core.php", "html.php", "file.php"]
+      "files": ["core.php", "html.php", "file.php", "classHelper.php"]
    },
    
    "require": {

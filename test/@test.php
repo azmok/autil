@@ -1,15 +1,15 @@
 <?php
 
 
-require_once $_SERVER['DOCUMENT_ROOT']  ."/azumap.net/public_html/vendor/autoload.php";
+require_once $_SERVER['DOCUMENT_ROOT']  ."/vendor/autoload.php";
 
-use function Autil\_, Autil\match, Autil\type;
+use function Autil\_, Autil\match, Autil\type, Autil\ObjectO;
 
 
 
 
 _( [1,2,3, "4", "hi"] );
-// (1, 2, 3)
+// (1, 2, 3, "4", "hi")
 
 
 $assoc = [
@@ -21,10 +21,10 @@ $assoc = [
 ];
 _( $assoc );
 /****  output  *****
-[name]: "azu"
-[id]: "001"
-[type]:
-   [gender]: "male"
+["name"]: "azu"
+["id"]: "001"
+["type"]:
+   ["gender"]: "male"
 /****************/
 
 
@@ -35,8 +35,8 @@ $arr2d = [
 _( $arr2d );
 /****  output  *****
 (
-    (1, 2, 3), 
-    (4, 5, 6)
+   (1, 2, "3", "a"), 
+   (4, 5, "6", "b")
 )
 /****************/
 
@@ -53,8 +53,8 @@ $assoc = [
 ];
 _( $assoc );
 /****  output  *****
-[id]: {}
-[name]: {}
+["id"]: {}
+["name"]: {}
 /****************/
 
 
@@ -87,14 +87,14 @@ json_decode:: Str -> Obj
 _( $jsonObj );
 /****  output  *****
 {
-   customers: (
+   "customers": (
       {
-         name: Mike Davis
-         age: 25
+         "name": "Mike Davis"
+         "age": 25
       }, 
       {
-         name: Sala Jordan
-         age: 17
+         "name": "Sala Jordan"
+         "age": 17
       }
    )
 }
@@ -106,14 +106,14 @@ _( type($jsonObj) ); // [object stdClass]
 
 _( get_object_vars($jsonObj) );
 /****  output  *****
-[customers]:(
+["customers"]:(
    {
-      name: Mike Davis
-      age: 25
+      "name": "Mike Davis"
+      "age": 25
    }, 
    {
-      name: Sala Jordan
-      age: 17
+      "name": "Sala Jordan"
+      "age": 17
    }
 )
 /****************/

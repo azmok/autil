@@ -1,9 +1,9 @@
 <?php
 
 
-require_once $_SERVER['DOCUMENT_ROOT']  ."/azumap.net/public_html/vendor/autoload.php";
+require_once $_SERVER['DOCUMENT_ROOT']  ."/vendor/autoload.php";
 
-use function Autil\_, Autil\match, Autil\type;
+use function Autil\_, Autil\match, Autil\type, Autil\ObjectO;
 
 
 _( gettype(true) ); // boolean

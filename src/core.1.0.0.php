@@ -44,7 +44,7 @@ function br($num=2){
 
 
 function isAssoc($val){
-   if( gettype($val) === "array"  &&  !is_callable($val) ){
+   if( gettype($val) === "array" ){
       $keys = array_keys($val);
       $StringKeyArray = array_filter($keys, function($val){
          return gettype($val) === "string";
@@ -53,11 +53,6 @@ function isAssoc($val){
    } else {
       return false;
    }
-}
-
-
-function isMethod($arr){
-   return is_array($arr) && is_callable($arr);
 }
 
 
@@ -200,14 +195,13 @@ function isOneDimensional( $val ){
 function isArray($val) {
    return (
       gettype($val) === "array"  &&
-      !isAssoc($val) &&
-      !is_callable($val)
+      !isAssoc($val)
    );
 }
 
 
 function type($val){
-   # Function, method
+   # Function
    if ( is_callable($val)  &&
         !is_object($val) ) {
       return "[Function]";
@@ -266,6 +260,9 @@ function includes($searchVal, $str){
 
 
 function length($arg){
+   exho( $arg );
+   //print_r($arg);
+   exho( 'type($arg)', type($arg) );
    ##  $arg :: [Function]
    if( type($arg) === "[object Closure]" ||
        type($arg) === "[Function]" ){
@@ -325,7 +322,7 @@ function _forEach($fn, $arr){
    }
 }
 
-
+/*
 function object2String($obj, $depth=0, $caller=null){
    $str = "";
    $BASE = 1;
@@ -342,8 +339,6 @@ function object2String($obj, $depth=0, $caller=null){
       
    # has props
    } else {
-      $indx = 0;
-      $lastIndex = count($arr) - 1;
    
       #####  '{'  ####
       # type($caller) === Array
@@ -352,29 +347,21 @@ function object2String($obj, $depth=0, $caller=null){
       } else {
          $str .= '{<br>';
       }
-      
+   
       foreach($arr as $key=>$val){
-      
+   
          # type(val) === object
-         $key = toString($key);
-         
          if ( is_object($val) ) {
-            $str .= prependTab("{$key}", $tabNum)  .": ".  object2String($val, $depth+1, $obj);
-         
+            $str .= prependTab("", $tabNum)  ."{$key}: ".  object2String($val, $depth+1, $obj);
+      
          # type($val) !== object
          } else {
-            $str .= prependTab("{$key}", $tabNum)  .": ".  toString($val, $depth+1, $obj);
-            
-            # '<br>' except $lastIndex
-            if( $indx !== $lastIndex ){
-               $str .= "<br>";
-            }
+            $str .= prependTab("", $tabNum)  ."{$key}: ".  toString($val, $depth+1, $obj);
+            $str .= "<br>";
          }
-         $indx++;
       }
    
       # '}'
-      $str .= "<br>";
       $str .= prependTab("}", $depth);
    
       return $str;
@@ -417,6 +404,254 @@ function prettify($arr, $depth=0, $caller=null, $format_assoc=False){
          
          # $curr :: ![Array] && ![AssocArray]
          } else {
+         
+            # inject $curr
+            $str .= " ".  toString($val, $depth+1, $arr);
+         }
+         $indx++;
+      }
+      
+      return $str;
+
+   ## Array, $format_assoc: false 
+   } elseif( isArray($arr)  &&  $format_assoc === false ){
+      
+      $str = "";
+         
+      if( empty($arr) ){
+         $str .= "". prependTab("()", $depth*$BASE);
+      } else {
+         _forEach(function($curr, $indx, $arr) use (&$str, $depth, $format_assoc, $BASE, $caller){
+            $lastIndex = length($arr) - 1;
+            
+            ######  (1) add `(`  ######
+            if ( $indx === 0  ){
+               # not nested arr
+               if( $depth === 0 ){
+                  $str .= "(";
+
+               # nested arr
+               } else {
+                  # type($caller) === Array 
+                  if( isType("[Array]", $caller) ){
+                     $str .= prependTab("(", $depth);
+                     
+                  # type($caller) !== Array
+                  } else {
+                     $str .= " (";
+                  }
+               }
+            }
+            
+            ######  (2) add $curr  ######
+            # $curr :: [Array]
+            if( isType("[Array]", $curr) ){
+               $str .= "<br>".  prettify($curr, $depth+1, $arr, $format_assoc);
+            
+            # $curr :: [AssocArray]
+            } elseif( isType("[AssocArray]", $curr) ){
+               $str .= "<br>".  prettify($curr, $depth+1, $arr, $format_assoc);
+            
+            # $curr :: ![Array] && ![AssocArray]
+            } else {
+               # inject $curr
+               $str2 = toString($curr, $depth+1, $arr);
+               
+               # type($curr) === object
+               if( preg_match("~\[object ~", $str2) ){
+                  # not nested arr
+                  if( $depth === 0 ){
+                     $str .= "<br>".  prependTab($str2, $BASE);
+                  } else {
+                     $str .= "<br>".  prependTab($str2, $depth*$BASE);
+                  }
+               
+               # type($curr) !== object
+               } else {
+                  $str .= $str2;
+               }
+            }
+         
+            ######  (3) add `,` | `)`  ######
+            # lastIndex
+            if ( $indx === $lastIndex ){
+            
+               # type($curr) ===  Array|Assoc
+               if( isArray($curr)  ||  isAssoc($curr) ){
+                  $str .= "<br>".  prependTab(")", $depth*$BASE);
+               
+               # type($curr) === object
+               } elseif ( is_object($curr) ){
+                  if( $caller ){
+                     $str .= "<br>".  prependTab(")", $depth);
+                  } else {
+                     $str .= ")";
+                  }
+               } else {
+                  $str .= ")";
+               }
+            # not lastIndex
+            } else {
+               $str .= ", ";
+               
+               if( isType("[AssocArray]", $curr) ){
+                  $str .= "<br>";
+               }
+            }
+         }, $arr);
+      }
+      
+      return $str;
+   }
+}
+
+
+function toString($arg, $depth=0, $caller=Null){
+
+   ## String
+   if( isType("[String]", $arg) ){
+      return $arg;
+      
+   ## Number
+   } elseif( isType("[Number]", $arg) ){
+      return "$arg";
+   
+   ## Boolean
+   } elseif ( isType("[Boolean]", $arg) ){
+      return $arg === true ? "true" : "false";
+   
+   ## Array, AssocArray
+   } elseif ( isAssoc($arg)  ||
+              isArray($arg) ){
+
+      return prettify($arg, $depth, $caller);
+   
+   ## Regex
+   } elseif ( isType("[Regex]", $arg) ){
+      return "{$arg}";
+   
+   
+   ## Object
+   } elseif ( is_object($arg) ){
+
+      ### Closure class
+      if( $arg instanceof \Closure ){
+         return "[object Closure]";
+         
+      ### exist '__toString()' method
+      } elseif( method_exists($arg, '__toString') ){
+         return $arg->__toString();
+      
+      } else {
+         return object2String($arg, $depth, $caller);
+      }
+   
+   ## Function
+   } elseif ( isType("[Function]", $arg) ){
+      $ref = new \ReflectionFunction($arg);
+      $fnName = $ref->getName();
+      
+      return "'$fnName'";
+   ## Null,
+   } else {
+      return type($arg);
+   }
+}
+
+/**/
+
+
+
+
+
+
+
+
+
+function object2String($obj, $depth=0, $caller=null){
+   $str = "";
+   $BASE = 1;
+   $tabNum = $BASE * (1 + $depth); // $BASE + $BASE*$depth;
+   
+   # get properties
+   $arr = get_object_vars( $obj );
+   
+   # no prop
+   if( empty($arr) ){
+      $str = "{}";
+      
+      return $str;
+      
+   # has props
+   } else {
+   
+      #####  '{'  ####
+      # type($caller) === Array
+      if( isType('[Array]', $caller) ){
+         $str .= "<br>".  prependTab("{<br>", $depth);
+      } else {
+         $str .= '{<br>';
+      }
+   
+      foreach($arr as $key=>$val){
+      
+         # type(val) === object
+         $key = toString($key);
+         
+         if ( is_object($val) ) {
+            $str .= prependTab("{$key}", $tabNum)  .": ".  object2String($val, $depth+1, $obj);
+         
+         # type($val) !== object
+         } else {
+            $str .= prependTab("{$key}", $tabNum)  .": ".  toString($val, $depth+1, $obj);
+            $str .= "<br>";
+         }
+      }
+   
+      # '}'
+      $str .= prependTab("}", $depth);
+   
+      return $str;
+   }
+}
+
+
+function prettify($arr, $depth=0, $caller=null, $format_assoc=False){
+   
+   $BASE = 1;
+   
+    ## AssocArr || (Array  && $format_assoc: true )
+   if( isAssoc($arr) ||
+       $format_assoc === true ){
+      
+      $str = "";
+      $indx = 0;
+      
+      foreach($arr as $key=>$val){
+         $lastIndex = length($arr) - 1;
+         
+         
+         ###### (1) add <br>, but not in last element  ######
+         if( $indx > 0  ||  $depth > 0 ){
+            $str .= "<br>";
+         }
+         
+         ###### (2) add tab
+         $key = toString($key);
+         $str .= prependTab("[{$key}]:", $depth);
+         
+         ###### (3) add "[$key]: $val"  ######
+         # $curr :: [AssocArray]
+         if( isType("[AssocArray]", $val) ){
+            $str .= prettify($val, $depth+1, $arr, $format_assoc);
+         
+         # $curr :: [Array]
+         } elseif( isType("[Array]", $val) ){
+            $str .= prettify($val, $depth, $arr, $format_assoc);
+         
+         # $curr :: ![Array] && ![AssocArray]
+         } else {
+         
             # inject $curr
             $str .= " ".  toString($val, $depth+1, $arr);
          }
@@ -540,6 +775,7 @@ function toString($arg, $depth=0, $caller=Null){
    ## Array, AssocArray
    } elseif ( isAssoc($arg)  ||
               isArray($arg) ){
+
       return prettify($arg, $depth, $caller);
    
    ## Object
@@ -559,27 +795,25 @@ function toString($arg, $depth=0, $caller=Null){
    
    ## Function
    } elseif ( isType("[Function]", $arg) ){
-      # method
-      if( isMethod($arg) ){
-         // $obj = $arg[0];
-         $methodName = $arg[1];
-         // $className = get_class($obj);
-         // $ref = new \ReflectionMethod($className, $methodName);
-         return "{$methodName}()";
-         
-      # normal fn
-      } else {
-         $ref = new \ReflectionFunction($arg);
-         $fnName = $ref->getName();
+      $ref = new \ReflectionFunction($arg);
+      $fnName = $ref->getName();
       
-         return "{$fnName}()";
-      }
-      
+      return "{$fnName}()";
    ## Null,
    } else {
       return type($arg);
    }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 function joinWith($jointer, ...$rest){
@@ -754,8 +988,8 @@ function _ (...$args){
    } else {
    #### args.length >= 2
       $str = "";
-      
       foreach($args as $arg){
+         
          if( type($arg) === "[Array]" ){
             $str .= toString($arg);
          } else {
@@ -765,6 +999,40 @@ function _ (...$args){
       inject( $str, "DIV", $style );
    }
 }
+
+
+function __ (...$args){
+   $style = [
+      "style" => [
+         "background" => "#faf8f6",
+         "padding" => "1rem",
+         "margin-top" => "3px",
+         "font" => "400 1rem/1.2 Inconsolata, Courier, monospace",
+         "letter-spacing" => "-0.3px",
+         "box-shadow" => "0 3px 9px 0px rgba(0,0,0,0.2)",
+         "border-radius" => "5px",
+         //"border-bottom" => "1px solid #e9e9e9",
+      ],
+   ];
+   #### args.length <= 1
+   if( count($args) <= 1 ){
+      inject( __toString($args[0]), "div", $style);
+      
+   } else {
+   #### args.length >= 2
+      $str = "";
+      foreach($args as $arg){
+         
+         if( type($arg) === "[Array]" ){
+            $str .= __toString($arg);
+         } else {
+            $str .= __toString($arg)  ." ";
+         }
+      }
+      inject( $str, "DIV", $style );
+   }
+}
+
 
 
 function pretty($arr, $format_assoc=true){   

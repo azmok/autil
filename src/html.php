@@ -2,6 +2,7 @@
 
 namespace Autil;
 
+require_once $_SERVER['DOCUMENT_ROOT']  ."/vendor/autoload.php";
 
 use OOPe\Classes\DOMDoc;
 
@@ -36,10 +37,9 @@ function render($val, $tagName="div", $assocArr=[]){
    # 
    if( empty($assocArr) ){
       $assocArr = [
-         "class" => "alert alert-warning text-center",
          "style" => [
             "margin-top" => "3.5rem",
-            "font" => "700 1.3125rem/1.2 sans-serif",
+            "font" => "400 1rem/1.2 sans-serif",
          ],
       ];
    }
@@ -48,7 +48,7 @@ function render($val, $tagName="div", $assocArr=[]){
 }
 
 
-function escape($str, ...$ops){
+function escapeHTML($str, ...$ops){
    $flags = $ops[0] ? $ops[0] : ENT_COMPAT;
    $encoding = $ops[1] ? $ops[1] : ini_get("default_charset");
    $double_encode = $ops[2] ? $ops[2] : TRUE;
@@ -57,7 +57,7 @@ function escape($str, ...$ops){
 }
 
 
-function unescape($str, ...$flags){
+function unescapeHTML($str, ...$flags){
    $flags = $flags[0] ? $flags[0] : ENT_COMPAT | ENT_HTML401;
    return htmlspecialchars_decode($str, $flags);
 }
@@ -77,7 +77,7 @@ function space2Dot($str, $interval=5, $char=","){
 
 
 function escapeD($str){
-   $escaped = escape($str);
+   $escaped = escapeHTML($str);
    
    return space2Dot($str);
 }
@@ -113,14 +113,13 @@ function toLiteral($val){
 
 
 function getOrCreateDOMDoc(){
-   ##  'DOMDoc(DOMDocument)' instance must exist only one in whole PHP envs.
-   # 
-   #  this flow pushing into 'OOPe\DOMDoc' fail proverbly because of returned value is
-   #  copied instance, not reference(pointer), if defined with '&'.
    $ref = new \ReflectionClass('OOPe\Classes\DOMDoc');
+   
    foreach( $GLOBALS as $key=>$val){
       # already exist
+      
       if( $val instanceof DOMDoc ){
+         _( $key, $val );
          return $val;
       }
    }
@@ -129,28 +128,12 @@ function getOrCreateDOMDoc(){
 }
 
 
-function loadCss($path){
-   $doc = getOrCreateDOMDoc();
-   
-   $doc->create('link')
-      ->attr("rel", "stylesheet")
-      ->attr("href", $path)
-      ->appendTo('head');
-}
 
 
-function loadJs($path){
-   $doc = getOrCreateDOMDoc();
-   
-   $doc->create('script')
-      ->attr("src", $path)
-      ->appendTo('body');
-}
 
+//getOrCreateDOMDoc()->init()->render();
 
 getOrCreateDOMDoc()->init()->render();
-
-
 
 
 

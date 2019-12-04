@@ -11,8 +11,8 @@ use \OOPe\Classes\ObjectO;
 use \OOPe\Classes\FunctionO;
 use \OOPe\Classes\RegExpO;
 
-use \OOPe\Classes\DOMDoc;
-use \OOPe\Classes\DOMElm;
+use \OOPe\Classes\DOM\Document;
+use \OOPe\Classes\DOM\Element;
 
 use \OOPe\Classes\LoggerO;
 
@@ -45,15 +45,32 @@ function RegExpO(...$args){
    return new RegExpO(...$args);
 }
 
-function DOMDoc(...$args){
-   return new DOMDoc(...$args);
+function Document(...$args){
+   return new Document(...$args);
 }
-function DOMElm(...$args){
-   return new DOMElm(...$args);
+function Elmement(...$args){
+   return new Element(...$args);
 }
 
 function LoggerO(...$args){
    return new LoggerO(...$args);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

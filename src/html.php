@@ -4,7 +4,7 @@ namespace Autil;
 
 require_once $_SERVER['DOCUMENT_ROOT']  ."/vendor/autoload.php";
 
-use OOPe\Classes\DOMDoc;
+use OOPe\Classes\DOM\Document;
 
 
 
@@ -118,13 +118,13 @@ function getOrCreateDOMDoc(){
    foreach( $GLOBALS as $key=>$val){
       # already exist
       
-      if( $val instanceof DOMDoc ){
+      if( $val instanceof Document ){
          _( $key, $val );
          return $val;
       }
    }
    # no exist yet
-   return new DOMDoc();
+   return new Document();
 }
 
 
@@ -133,7 +133,9 @@ function getOrCreateDOMDoc(){
 
 //getOrCreateDOMDoc()->init()->render();
 
-getOrCreateDOMDoc()->init()->render();
+(new Document())->init()->render();
+// === (new Document)->init()->render(); // without parenthesis on instanciation
+// === Document()->init()->render(); // using helper function to instanciate class 'OOPe\DOM\Document'
 
 
 

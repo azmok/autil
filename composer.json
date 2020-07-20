@@ -4,7 +4,12 @@
    "autoload": {
       "files": ["core.php", "html.php", "file.php", "classHelper.php"]
    },
-   
+   "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/azmok/oope"
+        }
+    ],
    "require": {
       "azmok/oope": "*"
    }

@@ -1,6 +1,7 @@
 {
    "name": "azmok/autil",
    "version": "1.0.0",
+   "minimum-stability": "stable",
    "autoload": {
       "files": ["core.php", "html.php", "file.php", "classHelper.php"]
    },

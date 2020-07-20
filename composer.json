@@ -8,7 +8,7 @@
    "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/azmok/oope"
+            "url": "https://github.com/azmok/oope.git"
         }
     ],
    "require": {

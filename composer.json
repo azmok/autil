@@ -8,11 +8,11 @@
    "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/azmok/oope.git"
+            "url": "https://github.com/azmok/oope"
         }
     ],
    "require": {
-      "azmok/oope": "1.0.0"
+      "azmok/oope": "dev-bugfix"
    }
 }
 

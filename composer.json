@@ -2,12 +2,12 @@
    "name": "azmok/autil",
    "version": "1.0.0",
    "autoload": {
-      "files": ["core.php", "html.php", "file.php", "classHelper.php"]
+      "files": ["src/core.php", "src/html.php", "src/file.php", "src/classHelper.php"]
    },
    "repositories": [
         {
-            "type": "vcs",
-            "url": "https://github.com/azmok/oope"
+         "type": "path",
+         "url": "C:/Users/Azuma/github/azmok/oope"
         }
     ],
    "require": {

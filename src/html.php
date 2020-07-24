@@ -2,8 +2,6 @@
 
 namespace Autil;
 
-require_once dirname(__FILE__, 2)  ."/vendor/autoload.php";
-
 use OOPe\Classes\DOM\Document;
 
 

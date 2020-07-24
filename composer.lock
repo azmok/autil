@@ -1,0 +1,49 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "1ff475501b8afaf4bd8bdc13f894a4ec",
+    "packages": [
+        {
+            "name": "azmok/oope",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/azmok/oope.git",
+                "reference": "f4660d620247060a24cd4af0758c2f6d8dd80aeb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/azmok/oope/zipball/f4660d620247060a24cd4af0758c2f6d8dd80aeb",
+                "reference": "f4660d620247060a24cd4af0758c2f6d8dd80aeb",
+                "shasum": ""
+            },
+            "require": {
+                "azmok/autil": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OOPe\\": "src"
+                }
+            },
+            "support": {
+                "source": "https://github.com/azmok/oope/tree/master",
+                "issues": "https://github.com/azmok/oope/issues"
+            },
+            "time": "2020-07-24T09:05:00+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "azmok/oope": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

@@ -4,15 +4,15 @@
    "autoload": {
       "files": ["src/core.php", "src/html.php", "src/file.php", "src/classHelper.php"]
    },
+   "require": {
+      "azmok/oope": "dev-master"
+   },
    "repositories": [
         {
-         "type": "path",
-         "url": "C:/Users/Azuma/github/azmok/oope"
+         "type": "vcs",
+         "url": "https://github.com/azmok/oope.git"
         }
-    ],
-   "require": {
-      "azmok/oope": "*"
-   }
+    ]
 }
 
 

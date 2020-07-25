@@ -2,8 +2,6 @@
 
 namespace Autil;
 
-require_once $_SERVER['DOCUMENT_ROOT']  ."/vendor/autoload.php";
-
 use OOPe\Classes\DOM\Document;
 
 
@@ -133,30 +131,6 @@ function getOrCreateDOMDoc(){
 
 //getOrCreateDOMDoc()->init()->render();
 
-(new Document())->init()->render();
+//(new Document())->init()->render();
 // === (new Document)->init()->render(); // without parenthesis on instanciation
 // === Document()->init()->render(); // using helper function to instanciate class 'OOPe\DOM\Document'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

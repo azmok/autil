@@ -2,8 +2,6 @@
 
 namespace Autil;
 
-use \OOPe\Classes\RegExpO;
-use \OOPe\Classes\AssocArrayO;
 
 
 
@@ -14,6 +12,14 @@ use \OOPe\Classes\AssocArrayO;
 const TABCHAR = "&ensp;&ensp;&ensp;";
 
 
+
+function escape($str){
+   return htmlspecialchars($str);
+}
+
+function unescape($str){
+   return htmlspecialchars_decode($str);
+}
 
 function exho(...$args){
    foreach( $args as $arg ){
@@ -1089,13 +1095,6 @@ function flattenDeep($arr, $depth=0){
 }
 
 
-function filterFlags($regexStr, $flag){
-   $regObj = new RegExpO( $regexStr );
-   $newRegObj = $regObj->filterFlags($flag);
-  // _( $newRegObj->value() );
-   return $newRegObj->valueOf();
-}
-
 
 function pushTo($val, $index, $arr){
    $lastIndex = length($arr) - 1;
@@ -1110,12 +1109,48 @@ function pushTo($val, $index, $arr){
 
 
 
+function getFlags($str){
+      $regex = '#^(\W)([\w\W]*?)\1(\w*)$#';
+      preg_match($regex, $str, $matches);
+      
+      $flagArr = splitWith("", $matches[3]);
+      
+      return $flagArr;
+}
+   
+   ## ::getRegex
+function getRegex($str){
+   $regex = '%^(\W)([\w\W]*?)\1(\w*)$%';
+   
+   preg_match($regex, $str, $matches);
+   //_( 'in getRegex()' );
+   //_( $matches );
+   return $matches[1] . $matches[2] . $matches[1];
+}
+
+function filterFlags($str){
+   $charsArr = str_split($str);
+   $flags = getFlags($str);
+   $filtered = array_diff($flags, $arr);
+   //_( $arr, $flags);
+   //_("diff:", $filtered);
+   $regex = $this->pattern();
+   //_( $this->regex() );
+   //_( $regex );
+   $newRegex = concat($regex, joinWith("", $filtered));
+   //_( $newRegex );
+   return $newRegex;
+}
+
+
+
 function match($searchPat, $str, $offset=false){
    ## $searchPat :: [Regex]
    if( isType("[Regex]", $searchPat) ){
-      $flags = RegExpO::getFlags($searchPat);
-      $pattern = RegExpO::getRegex($searchPat);
-      
+      $flags = getFlags($searchPat);
+      $pattern = getRegex($searchPat);
+      //_( '$flag:: ', $flag );
+      //_( '$pattern:: ', $pattern );
       ## global match
       if( $flags  &&  in_array("g", $flags) ){
          $notGFlags = filter(function($curr, $indx){

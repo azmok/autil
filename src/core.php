@@ -163,7 +163,7 @@ function rest($arr){
    $filterFn = function($curr, $indx){
       return $indx !== 0;
    };
-   $newArr = array_filter( $filterFn, $arr);
+   $newArr = array_filter($arr, $filterFn);
    
    return $newArr;
 }

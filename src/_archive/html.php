@@ -1,6 +1,6 @@
 <?php
 
-namespace Autil;
+namespace Autil\HTML;
 
 use OOPe\Classes\DOM\Document;
 

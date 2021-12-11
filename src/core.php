@@ -726,7 +726,7 @@ function toAttr($assocArr){
 }
 
 
-function inject($val, $tagName="div", $assocArr=[]){
+function inject($val, $tagName="DIV", $assocArr=[]){
    if( empty($assocArr) ){
       $assocArr = [
          "style" => [
@@ -739,6 +739,9 @@ function inject($val, $tagName="div", $assocArr=[]){
    echo "<{$tagName} {$str}>".  $val  ."</{$tagName}>";
 }
 
+function render($val, $tagName="H1", $assocArr=[]){
+   inject($val, $tagName, $assocArr);
+}
 
 function _ (...$args){
    $style = [
